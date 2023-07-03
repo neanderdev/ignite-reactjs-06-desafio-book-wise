@@ -1,16 +1,16 @@
 import Image from "next/image";
 import { ComponentProps } from "react";
 
-import * as Styled from "./styles";
+import { Container } from "./styles";
 
-type Props = ComponentProps<typeof Styled.Container> & {
+type Props = ComponentProps<typeof Container> & {
     text: string
     imgsrc: string
 }
 
 export function SignInButton({ text, imgsrc, ...rest }: Props) {
     return (
-        <Styled.Container {...rest}>
+        <Container {...rest}>
             <Image
                 src={imgsrc}
                 alt="google"
@@ -19,6 +19,6 @@ export function SignInButton({ text, imgsrc, ...rest }: Props) {
             />
 
             Entrar com {text}
-        </Styled.Container>
+        </Container>
     )
 }
