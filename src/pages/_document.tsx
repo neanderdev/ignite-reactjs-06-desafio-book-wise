@@ -1,15 +1,21 @@
-import { Head, Html, Main, NextScript } from 'next/document'
+import NextDocument, { Head, Html, Main, NextScript } from 'next/document';
 
-export default function Document() {
-  return (
-    <Html lang="pt-BR">
-      <Head />
+import { getCssText } from '../styles/stitches.config';
 
-      <body>
-        <Main />
+export default class Document extends NextDocument {
+  render() {
+    return (
+      <Html lang="pt-BR">
+        <Head>
+          <style id="stitches" dangerouslySetInnerHTML={{ __html: getCssText() }} />
+        </Head>
 
-        <NextScript />
-      </body>
-    </Html>
-  )
+        <body>
+          <Main />
+
+          <NextScript />
+        </body>
+      </Html>
+    );
+  }
 }
