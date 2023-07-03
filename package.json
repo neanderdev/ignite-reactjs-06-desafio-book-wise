@@ -12,6 +12,7 @@
     "seed": "ts-node --transpile-only prisma/seed.ts"
   },
   "dependencies": {
+    "@phosphor-icons/react": "^2.0.10",
     "@prisma/client": "^4.16.2",
     "@stitches/react": "^1.2.8",
     "@types/node": "20.3.3",
