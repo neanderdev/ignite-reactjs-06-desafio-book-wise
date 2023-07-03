@@ -4,7 +4,7 @@ import type { AppProps } from 'next/app';
 import { Nunito } from 'next/font/google';
 
 const nunito = Nunito({
-  weight: ['400', '700'],
+  weight: ['400', '500', '700'],
   subsets: ['latin']
 })
 
