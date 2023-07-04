@@ -6,7 +6,7 @@ import { IPostPreview } from '@/interface/IPost';
 
 import { theme } from "@/styles/stitches.config";
 
-import { Avatar } from '../../Avatar'
+import { Avatar } from '../../Avatar';
 
 import { About, Author, BookContainer, Content, Description, Header, Profile, PublishedAt, Rate, Title } from './styles';
 
@@ -14,7 +14,7 @@ interface Props {
   publication: Omit<IPostPreview, 'id'>
 }
 
-export function BookCardWithPost({publication}: Props) {
+export function BookCardWithPost({ publication }: Props) {
   const { colors } = theme;
 
   const { book, post } = publication;
@@ -23,7 +23,7 @@ export function BookCardWithPost({publication}: Props) {
     <BookContainer>
       <Header>
         <Profile>
-          <Avatar 
+          <Avatar
             src={'/images/avatar/avatar.png'}
             alt={'Jaxson Dias'}
             width={40}
@@ -44,12 +44,13 @@ export function BookCardWithPost({publication}: Props) {
           alt={book.title}
           width={108}
           height={152}
+          loading="lazy"
         />
 
         <Description>
 
           <Title>{book.title}</Title>
-          
+
           <Author>{book.author}</Author>
 
           <About>{book.description}</About>
@@ -59,9 +60,9 @@ export function BookCardWithPost({publication}: Props) {
       <Rate>
         {[...Array(5)].map((_, index) => {
           return (
-            <Star 
-              key={index} 
-              color={index + 1 <= book.rating && colors.purple100.value} 
+            <Star
+              key={index}
+              color={index + 1 <= book.rating && colors.purple100.value}
             />
           )
         })}

@@ -10,4 +10,8 @@ export const LayoutContainer = styled("div", {
   justifyContent: "center",
   gap: "6rem",
   padding: "20px",
+
+  "> div": {
+    flex: 1,
+  },
 });

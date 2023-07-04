@@ -29,6 +29,7 @@ export function BookCard({ title, author, cover, rating, description, publised_a
                 alt={title}
                 width={108}
                 height={152}
+                loading="lazy"
             />
 
             <Description>

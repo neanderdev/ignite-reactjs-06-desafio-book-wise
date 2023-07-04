@@ -22,6 +22,7 @@ export function BookCardReduce({ book }: Props) {
                 alt={book.title}
                 width={64}
                 height={94}
+                loading="lazy"
             />
 
             <Content>
