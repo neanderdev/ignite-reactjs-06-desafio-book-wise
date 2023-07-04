@@ -12,7 +12,7 @@ export const ModalContainer = styled("div", {
   alignItems: "center",
   justifyContent: "center",
 
-  zIndex: 1,
+  zIndex: 999,
 });
 
 export const Modal = styled("div", {
