@@ -7,7 +7,7 @@ import { AvatarPicture } from '../Avatar';
 
 import { Container, Content, ContentHeader, Header } from './styles';
 
-import bookCoverImg from '../../aseets/images/books/Book.png';
+import bookCoverImg from '../../assets/images/books/Book.png';
 
 export function Card() {
     const { colors } = theme;

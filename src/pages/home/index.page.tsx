@@ -1,10 +1,18 @@
-import Head from 'next/head'
+import { ChartLine } from '@phosphor-icons/react';
+import Head from 'next/head';
+import Link from 'next/link';
 
-import { Navbar } from '@/components/Navbar'
+import { ShyCard } from '@/components/Book/ShyCard';
+import { Card } from '@/components/Card';
+import { Navbar } from '@/components/Navbar';
 
-import { Container, Content } from './styles'
+import { theme } from '@/styles/stitches.config';
+
+import { Aside, BooksContent, Container, Content } from './styles';
 
 export default function Home() {
+    const { colors } = theme
+
     return (
         <>
             <Head>
@@ -21,7 +29,37 @@ export default function Home() {
                 <Navbar />
 
                 <Content>
-                    content
+                    <div className="header">
+                        <ChartLine size={32} color={colors.green100.value} />
+
+                        <h2>Início</h2>
+                    </div>
+
+                    <div className='sections'>
+                        <BooksContent>
+                            <h6>Avaliações mais recentes</h6>
+
+                            <Card />
+
+                            <Card />
+
+                            <Card />
+                        </BooksContent>
+
+                        <Aside>
+                            <div className="header">
+                                <h5>Livros populares</h5>
+
+                                <Link href="#">Ver todos</Link>
+                            </div>
+
+                            <ShyCard />
+
+                            <ShyCard />
+
+                            <ShyCard />
+                        </Aside>
+                    </div>
                 </Content>
             </Container>
         </>
