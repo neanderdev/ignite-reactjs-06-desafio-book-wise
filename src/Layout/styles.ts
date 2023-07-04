@@ -1,18 +1,16 @@
 import { styled } from "@/styles/stitches.config";
 
 export const LayoutContainer = styled("div", {
-  maxWidth: "1440px",
   width: "100%",
-  height: "100vh",
-  margin: "0 auto",
+  padding: "20px",
 
   display: "flex",
-  justifyContent: "center",
-  gap: "6rem",
-  padding: "20px",
+  gap: "40px",
 
   "> div": {
     flex: 1,
-    position: "relative",
+    maxWidth: "980px",
+    height: "100%",
+    margin: "0 auto",
   },
 });

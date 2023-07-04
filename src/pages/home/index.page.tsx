@@ -2,7 +2,7 @@ import { ChartLine } from '@phosphor-icons/react';
 import { useSession } from 'next-auth/react';
 import Head from 'next/head';
 
-import Layout from '@/components/Layout';
+import Layout from "@/Layout";
 
 import { theme } from '@/styles/stitches.config';
 

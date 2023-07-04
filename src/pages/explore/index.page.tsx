@@ -3,9 +3,10 @@ import Head from 'next/head';
 import { useState } from 'react';
 
 import { BookCardReduce } from '@/components/Book/BookCardReduce';
-import Layout from "@/components/Layout";
 import { BookDetailsModal } from '@/components/Modals/BookDetailsModal';
 import { SearchInput } from '@/components/SearchInput';
+
+import Layout from "@/Layout";
 
 import { theme } from '@/styles/stitches.config';
 
