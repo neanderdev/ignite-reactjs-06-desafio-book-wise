@@ -1,13 +1,14 @@
+import { ComponentProps } from 'react'
+
 import { Container, Image } from './styles'
 
-import avatarImg from '../../assets/temp/avatar.png'
+type Props = ComponentProps<typeof Image> & {}
 
-export function AvatarPicture() {
+export function Avatar({ ...rest }: Props) {
     return (
         <Container>
             <Image
-                src={avatarImg}
-                alt="Nome do usuário"
+                {...rest}
             />
         </Container>
     )

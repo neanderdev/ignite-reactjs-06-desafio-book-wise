@@ -1,51 +1,88 @@
-import { Binoculars, ChartLineUp, SignIn as SignInIcon } from "@phosphor-icons/react";
+import { Binoculars, ChartLineUp, User } from "@phosphor-icons/react";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/router";
+import NextLink from "next/link";
+import { useState } from "react";
 
-import { theme } from '@/styles/stitches.config';
+import { Link } from "./components/Link";
+import { ProfileOrSignIn } from "./components/ProfileOrSignIn";
 
-import { Container, Link as LinkCSS, SignIn } from "./styles";
+import { ModalSignIn } from "../ModalSignIn";
+
+import { Container, Navigation } from "./styles";
 
 import logoSvg from '../../assets/logo.svg';
 
+
+const publicLinks = [
+    {
+        id: 1,
+        text: 'Início',
+        href: "/home",
+        icon: <ChartLineUp size={24} />
+    },
+    {
+        id: 2,
+        text: 'Explorar',
+        href: "/explore",
+        icon: <Binoculars size={24} />
+    }
+]
+
+const protectedLinks = [
+    {
+        id: 1,
+        text: 'Perfil',
+        href: "/profile",
+        icon: <User size={24} />
+    },
+]
+
 export function Navbar() {
-    const router = useRouter()
-    const { colors } = theme
+    const [isActiveModal, setIsModalActive] = useState(false);
+
+    const session = useSession();
 
     return (
         <Container>
-            <Link href="/home" className="logo">
+            {/* Logo */}
+            <NextLink href="/home" className="logo">
                 <Image
                     src={logoSvg}
-                    alt=""
+                    alt="Book Wise"
                     width={128}
                 />
-            </Link>
+            </NextLink>
 
-            <LinkCSS
-                href="/home"
-                active={router.pathname.includes('/home')}
-            >
-                <ChartLineUp size={24} />
+            <Navigation>
+                {publicLinks.map(link => (
+                    <Link
+                        key={link.id}
+                        text={link.text}
+                        href={link.href}
+                        icon={link.icon}
+                    />
+                ))}
 
-                Início
-            </LinkCSS>
+                {session?.data?.user
+                    && protectedLinks.map(link => (
+                        <Link
+                            key={link.id}
+                            text={link.text}
+                            href={link.href}
+                            icon={link.icon}
+                        />
+                    ))}
+            </Navigation>
 
-            <LinkCSS
-                href="/explore"
-                active={router.pathname.includes('/explore')}
-            >
-                <Binoculars size={24} />
+            <ProfileOrSignIn
+                setIsActive={setIsModalActive}
+            />
 
-                Explorar
-            </LinkCSS>
-
-            <SignIn>
-                Fazer Login
-
-                <SignInIcon size={20} color={colors.green100.value} />
-            </SignIn>
+            <ModalSignIn
+                isActive={isActiveModal}
+                setIsActive={setIsModalActive}
+            />
         </Container>
     )
 }

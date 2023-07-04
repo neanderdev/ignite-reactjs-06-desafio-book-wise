@@ -2,19 +2,22 @@ import { ChartLine } from '@phosphor-icons/react';
 import { useSession } from 'next-auth/react';
 import Head from 'next/head';
 
-import { Card } from '@/components/Card';
-import { Navbar } from '@/components/Navbar';
+import Layout from '@/components/Layout';
 
 import { theme } from '@/styles/stitches.config';
 
-import { BooksContent, Container, Content } from './styles';
+import { LatestLibrary } from './components/LatestLibrary';
+import { PopularLibrary } from './components/PopularLibrary';
+import { ReadingList } from './components/ReadingList';
+
+import { books, recentReviews } from './utils/book';
+
+import { Aside, Center, Container, Header } from './styles';
 
 export default function Home() {
     const { colors } = theme
 
-    const session = useSession();
-
-    console.log(session)
+    const { data } = useSession();
 
     return (
         <>
@@ -28,43 +31,38 @@ export default function Home() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
-            <Container>
-                <Navbar />
+            <Layout>
+                <Header>
+                    <ChartLine size={32} color={colors.green100.value} />
 
-                <Content>
-                    <div className="header">
-                        <ChartLine size={32} color={colors.green100.value} />
+                    <h1>Início</h1>
+                </Header>
 
-                        <h2>Início</h2>
-                    </div>
+                <Container>
+                    <Center>
+                        {data?.user && (
+                            <ReadingList
+                                title="Sua última leitura"
+                                urlReference="/"
+                                books={[books[0]]}
+                            />
+                        )}
 
-                    <div className='sections'>
-                        <BooksContent>
-                            <h6>Avaliações mais recentes</h6>
+                        <LatestLibrary
+                            title="Avaliações mais recentes"
+                            publication={recentReviews}
+                        />
+                    </Center>
 
-                            <Card />
-
-                            <Card />
-
-                            <Card />
-                        </BooksContent>
-
-                        {/* <Aside>
-                            <div className="header">
-                                <h5>Livros populares</h5>
-
-                                <Link href="/">Ver todos</Link>
-                            </div>
-
-                            <ShyCard />
-
-                            <ShyCard />
-
-                            <ShyCard />
-                        </Aside> */}
-                    </div>
-                </Content>
-            </Container>
+                    <Aside>
+                        <PopularLibrary
+                            title="Livros populares"
+                            urlReference="/"
+                            books={books}
+                        />
+                    </Aside>
+                </Container>
+            </Layout>
         </>
     )
 }
