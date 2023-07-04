@@ -1,17 +1,20 @@
 import { ChartLine } from '@phosphor-icons/react';
+import { useSession } from 'next-auth/react';
 import Head from 'next/head';
-import Link from 'next/link';
 
-import { ShyCard } from '@/components/Book/ShyCard';
 import { Card } from '@/components/Card';
 import { Navbar } from '@/components/Navbar';
 
 import { theme } from '@/styles/stitches.config';
 
-import { Aside, BooksContent, Container, Content } from './styles';
+import { BooksContent, Container, Content } from './styles';
 
 export default function Home() {
     const { colors } = theme
+
+    const session = useSession();
+
+    console.log(session)
 
     return (
         <>
@@ -46,11 +49,11 @@ export default function Home() {
                             <Card />
                         </BooksContent>
 
-                        <Aside>
+                        {/* <Aside>
                             <div className="header">
                                 <h5>Livros populares</h5>
 
-                                <Link href="#">Ver todos</Link>
+                                <Link href="/">Ver todos</Link>
                             </div>
 
                             <ShyCard />
@@ -58,7 +61,7 @@ export default function Home() {
                             <ShyCard />
 
                             <ShyCard />
-                        </Aside>
+                        </Aside> */}
                     </div>
                 </Content>
             </Container>

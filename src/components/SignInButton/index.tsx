@@ -10,7 +10,7 @@ type Props = ComponentProps<typeof Container> & {
 
 export function SignInButton({ text, imgsrc, ...rest }: Props) {
     return (
-        <Container {...rest}>
+        <Container type="button" {...rest}>
             <Image
                 src={imgsrc}
                 alt="google"
