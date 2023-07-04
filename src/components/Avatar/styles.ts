@@ -17,4 +17,5 @@ export const Image = styled(NextImage, {
   borderStyle: "solid",
   borderWidth: "1.5px",
   borderImage: "linear-gradient(to bottom, transparent) 1",
+  objectFit: "cover",
 });

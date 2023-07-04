@@ -1,8 +1,14 @@
 import { ChartLine } from '@phosphor-icons/react';
 import { useSession } from 'next-auth/react';
 import Head from 'next/head';
+import { useEffect, useState } from 'react';
 
 import Layout from "@/Layout";
+
+import { api } from '@/services/http';
+
+import { IBook, IBookRating } from '@/interface/IBooks';
+import { IUser } from '@/interface/IUser';
 
 import { theme } from '@/styles/stitches.config';
 
@@ -14,11 +20,49 @@ import { books, recentReviews } from './utils/book';
 
 import { Aside, Center, Container, Header } from './styles';
 
-export default function Home() {
-    const { colors } = theme
+interface IBooksByRecentReview {
+  rating: IBookRating;
+  book: IBook;
+  user: IUser;
+}
 
-    const { data } = useSession();
-    console.log(data)
+interface IRequestBooksByRecentReview {
+  reviews: (IBookRating & {
+    book: IBook
+    user: IUser;
+  })[]
+}
+
+export default function Home() {
+    const { colors } = theme;
+
+  const { data } = useSession();
+
+  const [booksByRecentReview, setBooksByRecentReview] = useState<IBooksByRecentReview[]>([])
+
+  useEffect(() => {
+    const getBooks = async () => {
+      const response = await api.get<IRequestBooksByRecentReview>(`/books/by-rating`)
+
+      const filteredBooks = response.data.reviews.map((review) => {
+        return {
+          rating: {
+            id: review.id,
+            book_id: review.book_id,
+            description: review.description,
+            rate: review.rate,
+            created_at: review.created_at
+          },
+          book: review.book,
+          user: review.user
+        }
+      })
+
+      setBooksByRecentReview(filteredBooks);
+    }
+
+    getBooks()
+  }, [])
 
     return (
         <>
@@ -51,16 +95,16 @@ export default function Home() {
 
                         <LatestLibrary
                             title="Avaliações mais recentes"
-                            publication={recentReviews}
+                            reviews={booksByRecentReview}
                         />
                     </Center>
 
                     <Aside>
-                        <PopularLibrary
+                        {/* <PopularLibrary
                             title="Livros populares"
                             urlReference="/"
                             books={books}
-                        />
+                        /> */}
                     </Aside>
                 </Container>
             </Layout>

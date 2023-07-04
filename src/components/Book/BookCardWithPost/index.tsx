@@ -1,47 +1,47 @@
 import Image from 'next/image';
 
+import { Avatar } from '@/components/Avatar';
 import { Star } from '@/components/Start';
-
-import { IPostPreview } from '@/interface/IPost';
 
 import { theme } from "@/styles/stitches.config";
 
-import { Avatar } from '../../Avatar';
+import { IBook, IBookRating } from '@/interface/IBooks';
+import { IUser } from '@/interface/IUser';
 
 import { About, Author, BookContainer, Content, Description, Header, Profile, PublishedAt, Rate, Title } from './styles';
 
 interface Props {
-  publication: Omit<IPostPreview, 'id'>
+  book: IBook;
+  user: IUser;
+  rating: IBookRating;
 }
 
-export function BookCardWithPost({ publication }: Props) {
+export function BookCardWithPost({ book, rating, user }: Props) {
   const { colors } = theme;
-
-  const { book, post } = publication;
 
   return (
     <BookContainer>
       <Header>
         <Profile>
           <Avatar
-            src={'/images/avatar/avatar.png'}
-            alt={'Jaxson Dias'}
+            src={user.avatar_url}
+            alt={user.name}
             width={40}
             height={40}
           />
 
           <div>
-            <Title>{post.author}</Title>
+            <Title>{user.name}</Title>
 
-            <PublishedAt>{post.publised_at}</PublishedAt>
+            <PublishedAt>{user.created_at}</PublishedAt>
           </div>
         </Profile>
       </Header>
 
       <Content>
         <Image
-          src={book.cover}
-          alt={book.title}
+          src={book.cover_url.replace('public', '')}
+          alt={book.author}
           width={108}
           height={152}
           loading="lazy"
@@ -53,7 +53,7 @@ export function BookCardWithPost({ publication }: Props) {
 
           <Author>{book.author}</Author>
 
-          <About>{book.description}</About>
+          <About>{book.summary}</About>
         </Description>
       </Content>
 
@@ -62,7 +62,7 @@ export function BookCardWithPost({ publication }: Props) {
           return (
             <Star
               key={index}
-              color={index + 1 <= book.rating && colors.purple100.value}
+              color={index + 1 <= rating.rate && colors.purple100.value}
             />
           )
         })}

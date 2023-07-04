@@ -1,9 +1,17 @@
 export interface IBook {
   id: number;
   title: string;
-  cover: string;
   author: string;
-  publised_at: string;
+  cover_url: string;
+  created_at: string;
+  summary: string;
+  total_pages: number;
+}
+
+export interface IBookRating {
+  id: string;
+  book_id: string;
   description: string;
-  rating: number;
+  rate: number;
+  created_at: string;
 }
