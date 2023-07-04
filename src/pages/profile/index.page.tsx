@@ -2,24 +2,16 @@ import { User } from '@phosphor-icons/react';
 import Head from 'next/head';
 import { useState } from 'react';
 
-import { BookCardReduce } from '@/components/Book/BookCardReduce';
-import { SearchInput } from '@/components/SearchInput';
-
 import Layout from "@/Layout";
 
 import { theme } from '@/styles/stitches.config';
 
-import { User as UserComponent } from './components/User';
-
-import { recentReviews } from '../home/utils/book';
-
-import { Aside, Container, Content, ExplorerBooks, Header, Search } from './styles';
-
+import { Header } from './styles';
 
 export default function Profile() {
-    const [filterSelected, setFilterSelected] = useState('Tudo')
+    const { colors } = theme;
 
-    const { colors } = theme
+    const [filterSelected, setFilterSelected] = useState('');
 
     return (
         <>
@@ -33,7 +25,7 @@ export default function Profile() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
-            <Layout>
+            <Layout title='Profile' icon={<User size={32} color={colors.green100.value} />}>
                 {/* Header */}
                 <Header>
                     <User size={32} color={colors.green100.value} />
@@ -42,8 +34,7 @@ export default function Profile() {
                 </Header>
 
                 {/* Cards */}
-                <Container>
-
+                {/* <Container>
                     <Content>
                         <Search>
                             <SearchInput placeholder='Buscar livro ou autor' />
@@ -59,7 +50,7 @@ export default function Profile() {
                     <Aside>
                         <UserComponent />
                     </Aside>
-                </Container>
+                </Container> */}
             </Layout>
 
         </>

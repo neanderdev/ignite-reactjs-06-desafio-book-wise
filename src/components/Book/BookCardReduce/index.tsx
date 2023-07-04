@@ -1,25 +1,26 @@
 import Image from 'next/image';
 
-import { Star } from '@/components/Start';
+import { Box } from "@/components/Box";
+import { AvaliationStars } from '@/components/Generics/AvaliationStars';
 
 import { IBook } from '@/interface/IBooks';
 
-import { theme } from "@/styles/stitches.config";
-
-import { BookCardContainer, Content, Header, Rate } from "./styles";
+import { Content, Header } from "./styles";
 
 type Props = {
-    book: Omit<IBook, 'id'>
+    book: (IBook & {
+        rate: number;
+    })
 }
 
 export function BookCardReduce({ book }: Props) {
-    const { colors } = theme;
+    const book_image = book.cover_url.replace('public', '');
 
     return (
-        <BookCardContainer>
+        <Box>
             <Image
-                src={book.cover}
-                alt={book.title}
+                src={book_image}
+                alt={book.name}
                 width={64}
                 height={94}
                 loading="lazy"
@@ -27,22 +28,13 @@ export function BookCardReduce({ book }: Props) {
 
             <Content>
                 <Header>
-                    <h3>{book.title}</h3>
+                    <h3>{book.name}</h3>
 
                     <span>{book.author}</span>
                 </Header>
 
-                <Rate>
-                    {[...Array(5)].map((_, index) => {
-                        return (
-                            <Star
-                                key={index}
-                                color={index + 1 <= book.rating && colors.purple100.value}
-                            />
-                        )
-                    })}
-                </Rate>
+                <AvaliationStars bookRating={book.rate} />
             </Content>
-        </BookCardContainer>
+        </Box>
     )
 }

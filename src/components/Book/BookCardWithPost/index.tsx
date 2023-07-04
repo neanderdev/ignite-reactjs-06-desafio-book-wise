@@ -1,5 +1,6 @@
 import Image from 'next/image';
 
+import { Box } from '@/components/Box';
 import { Avatar } from '@/components/Avatar';
 import { Star } from '@/components/Start';
 
@@ -8,7 +9,7 @@ import { theme } from "@/styles/stitches.config";
 import { IBook, IBookRating } from '@/interface/IBooks';
 import { IUser } from '@/interface/IUser';
 
-import { About, Author, BookContainer, Content, Description, Header, Profile, PublishedAt, Rate, Title } from './styles';
+import { About, Author, Content, Description, Header, Profile, PublishedAt, Rate, Title } from './styles';
 
 interface Props {
   book: IBook;
@@ -20,7 +21,7 @@ export function BookCardWithPost({ book, rating, user }: Props) {
   const { colors } = theme;
 
   return (
-    <BookContainer>
+    <Box direction="column" padding={'md'}>
       <Header>
         <Profile>
           <Avatar
@@ -48,8 +49,7 @@ export function BookCardWithPost({ book, rating, user }: Props) {
         />
 
         <Description>
-
-          <Title>{book.title}</Title>
+          <Title>{book.name}</Title>
 
           <Author>{book.author}</Author>
 
@@ -67,6 +67,6 @@ export function BookCardWithPost({ book, rating, user }: Props) {
           )
         })}
       </Rate>
-    </BookContainer>
+    </Box>
   )
 }

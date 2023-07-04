@@ -1,38 +1,37 @@
 import { X } from "@phosphor-icons/react";
 import { signIn } from "next-auth/react";
 
-import { theme } from "@/styles/stitches.config";
+import { SignInButton } from "@/components/SignInButton";
 
-import { SignInButton } from "../SignInButton";
+import { useModal } from "@/hooks/useModal";
+
+import { theme } from "@/styles/stitches.config";
 
 import { providerSchema } from "./utils/providers-schema";
 
 import { Close, Modal, ModalContainer } from "./styles";
 
-type Props = {
-    isActive: boolean
-    setIsActive: (status: boolean) => void
-}
+export function ModalSignIn() {
+    const { signInModal, setSignInModal } = useModal();
 
-export function ModalSignIn({ isActive, setIsActive }: Props) {
     const { colors } = theme;
 
     async function handleSignIn(provider: string) {
         try {
             await signIn(provider);
 
-            setIsActive(false);
+            setSignInModal(false);
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
     }
 
-    if (!isActive) return null
+    if (!signInModal) return null;
 
     return (
         <ModalContainer>
             <Modal>
-                <Close onClick={() => setIsActive(false)}>
+                <Close onClick={() => setSignInModal(false)}>
                     <X size={24} color={colors.gray400.value} />
                 </Close>
 

@@ -1,26 +1,71 @@
 import { Binoculars } from '@phosphor-icons/react';
 import Head from 'next/head';
-import { useState } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 
-import { BookCardReduce } from '@/components/Book/BookCardReduce';
-import { BookDetailsModal } from '@/components/Modals/BookDetailsModal';
+import DefaultLayout from '@/Layout';
+
+import { ExplorerBookCard } from '@/components/Book/ExplorerBookCard';
+import { Loading } from '@/components/Generics/Loading';
 import { SearchInput } from '@/components/SearchInput';
 
-import Layout from "@/Layout";
+import { IBaseBook, IBaseRating, IBookWithAverage } from '@/interface/IBooks';
+
+import { api } from '@/services/http';
 
 import { theme } from '@/styles/stitches.config';
 
-import { bookFilters } from './utils/books-filters';
+import { Filters } from './components/Filters';
 
-import { recentReviews } from '../home/utils/book';
+import { NextPageWithLayout } from '../_app.page';
 
-import { ExplorerBooks, Filter, FiltersContainer, Header, Search } from './styles';
+import { ExplorerBooks, Search } from './styles';
 
+interface IRequest {
+    books: IBaseBook;
+    ratings: IBaseRating[];
+}
 
-export default function Explore() {
-    const [filterSelected, setFilterSelected] = useState('Tudo')
+const ExplorePage: NextPageWithLayout = () => {
+    const [books, setBooks] = useState<IBookWithAverage[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [filterSelected, setFilterSelected] = useState('');
+    const [search, setSearch] = useState('');
 
-    const { colors } = theme
+    useEffect(() => {
+        const getPopularBooks = async () => {
+            try {
+                setIsLoading(true);
+
+                const query = filterSelected ? `filter=${filterSelected}` : '';
+                const response = await api.get<IRequest[]>(`/books?${query}`);
+
+                let filteredResponse = response.data.map(({ books, ratings }) => {
+                    const rate = ratings.reduce((acc, rating) => {
+                        return acc += rating.rate;
+                    }, 0);
+
+                    return {
+                        ...books,
+                        average: Math.round(rate / ratings.length)
+                    }
+                });
+
+                if (search.length > 0) {
+                    filteredResponse = filteredResponse.filter(book =>
+                        book.author.includes(search) || book.name.includes(search)
+                    )
+                }
+
+                setBooks(filteredResponse);
+            } catch (error) {
+                console.log(error);
+            } finally {
+                setIsLoading(false);
+            }
+        }
+
+        getPopularBooks();
+    }, [filterSelected, search]);
 
     return (
         <>
@@ -34,40 +79,50 @@ export default function Explore() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
-            <Layout>
-                {/* Header */}
-                <Header>
-                    <Binoculars size={32} color={colors.green100.value} />
-
-                    <h1>Explorar</h1>
-                </Header>
-
-                <Search >
-                    <SearchInput placeholder='Buscar livro ou autor' />
+            {/* Page */}
+            <div>
+                <Search>
+                    <SearchInput
+                        placeholder='Buscar livro ou autor'
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
                 </Search>
 
-                {/* Filters */}
-                <FiltersContainer>
-                    {bookFilters.map(filter => (
-                        <Filter
-                            key={filter}
-                            isSelected={filterSelected === filter}
-                            onClick={() => setFilterSelected(filter)}
-                        >
-                            {filter}
-                        </Filter>
-                    ))}
-                </FiltersContainer>
+                <Filters
+                    filterSelected={filterSelected}
+                    updateFilter={setFilterSelected}
+                />
 
-                {/* Cards */}
-                <ExplorerBooks>
-                    {recentReviews.map(pub => (
-                        <BookCardReduce key={pub.id} book={pub.book} />
-                    ))}
-                </ExplorerBooks>
-            </Layout>
+                {isLoading ? <Loading /> : (
+                    <ExplorerBooks>
+                        <>
+                            {books && books.map(book => (
+                                <ExplorerBookCard
+                                    key={book.id}
+                                    book={book}
+                                />
+                            ))}
+                        </>
+                    </ExplorerBooks>
+                )}
 
-            <BookDetailsModal />
+            </div>
         </>
     )
 }
+
+ExplorePage.getLayout = (page: ReactElement) => {
+    const { colors } = theme;
+
+    return (
+        <DefaultLayout
+            title='Explorar'
+            icon={<Binoculars size={32} color={colors.green100.value} />}
+        >
+            {page}
+        </DefaultLayout>
+    )
+}
+
+export default ExplorePage;

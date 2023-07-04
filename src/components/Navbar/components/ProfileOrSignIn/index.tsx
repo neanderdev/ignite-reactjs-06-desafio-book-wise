@@ -3,21 +3,21 @@ import { signOut, useSession } from "next-auth/react";
 
 import { Avatar } from "@/components/Avatar";
 
+import { useModal } from "@/hooks/useModal";
+
 import { theme } from "@/styles/stitches.config";
 
 import { Login, Logout, ProfileContainer } from "./styles";
 
-type Props = {
-    setIsActive: (status: boolean) => void
-}
-
-export function ProfileOrSignIn({ setIsActive }: Props) {
+export function ProfileOrSignIn() {
     const { colors } = theme;
 
     const { data } = useSession();
 
+    const {setSignInModal} = useModal();
+
     if (!data?.user) return (
-        <Login onClick={() => setIsActive(true)}>
+        <Login onClick={() => setSignInModal(true)}>
             Fazer Login
 
             <SignIn size={20} color={colors.green100.value} />
@@ -27,7 +27,7 @@ export function ProfileOrSignIn({ setIsActive }: Props) {
     return (
         <ProfileContainer>
             <Avatar
-                src={data?.user?.image ?? '/images/avatar/avatar.png'}
+                src={data?.avatar_url!}
                 alt={data.user?.name!}
                 width={32}
                 height={32}

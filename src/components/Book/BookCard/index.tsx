@@ -1,54 +1,45 @@
 import Image from 'next/image';
 
-import { Star } from '@/components/Start';
+import { Box } from "@/components/Box";
+import { AvaliationStars } from '@/components/Generics/AvaliationStars';
 
 import { IBook } from '@/interface/IBooks';
 
-import { theme } from "@/styles/stitches.config";
+import { About, Author, Avaliation, Description, PublishedAt, Title } from './styles';
 
-import { About, Author, BookContainer, Description, PublishedAt, Rate, Title } from './styles';
+interface Props {
+    book: (IBook & {
+        rate: number;
+    })
+}
 
-export function BookCard({ title, author, cover, rating, description, publised_at }: Omit<IBook, 'id'>) {
-    const { colors } = theme;
+export function BookCard({ book }: Props) {
+    const book_image = book?.cover_url?.replace('public', '');
 
     return (
-        <BookContainer>
-            <Rate>
-                {[...Array(5)].map((_, index) => {
-                    return (
-                        <Star
-                            key={index}
-                            color={index + 1 <= rating && colors.purple100.value}
-                        />
-                    )
-                })}
-            </Rate>
+        <Box>
+
+            <Avaliation>
+                <AvaliationStars bookRating={book.rate} />
+            </Avaliation>
 
             <Image
-                src={cover}
-                alt={title}
+                src={book_image}
+                alt={book.name}
                 width={108}
                 height={152}
                 loading="lazy"
             />
 
             <Description>
-                <PublishedAt>Há {publised_at} dias</PublishedAt>
+                <PublishedAt>Há {book.created_at} dias</PublishedAt>
 
-                <Title>{title}</Title>
+                <Title>{book.name}</Title>
 
-                <Author>{author}</Author>
+                <Author>{book.author}</Author>
 
-                <About>{description}</About>
+                <About>{book.summary}</About>
             </Description>
-        </BookContainer>
+        </Box>
     )
 }
-
-{/* <div className="assessments">
-          <Star size={14} weight="fill" color={colors.purple100.value} />
-          <Star size={14} weight="fill" color={colors.purple100.value} />
-          <Star size={14} weight="fill" color={colors.purple100.value}/>
-          <Star size={14} weight="fill" color={colors.purple100.value}/>
-          <Star size={14} color={colors.purple100.value} />
-        </div> */}

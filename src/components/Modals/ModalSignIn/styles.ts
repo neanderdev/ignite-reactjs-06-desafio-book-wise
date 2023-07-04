@@ -1,19 +1,10 @@
 import { styled } from "@/styles/stitches.config";
 
-export const ModalContainer = styled("div", {
-  width: "100%",
-  height: "100vh",
-  position: "absolute",
-  top: 0,
-  left: 0,
-  background: "rgba(0,0,0,.6)",
+import { ModalWrapper } from "../ModalWrapper";
 
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-
-  zIndex: 999,
-});
+export const ModalContainer = styled(ModalWrapper, {
+  zIndex: 100
+})
 
 export const Modal = styled("div", {
   backgroundColor: "$gray700",

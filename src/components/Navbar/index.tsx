@@ -2,12 +2,11 @@ import { Binoculars, ChartLineUp, User } from "@phosphor-icons/react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import NextLink from "next/link";
-import { useState } from "react";
 
 import { Link } from "./components/Link";
 import { ProfileOrSignIn } from "./components/ProfileOrSignIn";
 
-import { ModalSignIn } from "../ModalSignIn";
+import { ModalSignIn } from "../Modals/ModalSignIn";
 
 import { Container, Navigation } from "./styles";
 
@@ -18,7 +17,7 @@ const publicLinks = [
     {
         id: 1,
         text: 'Início',
-        href: "/home",
+        href: "/",
         icon: <ChartLineUp size={24} />
     },
     {
@@ -39,8 +38,6 @@ const protectedLinks = [
 ]
 
 export function Navbar() {
-    const [isActiveModal, setIsModalActive] = useState(false);
-
     const session = useSession();
 
     return (
@@ -76,14 +73,9 @@ export function Navbar() {
                     ))}
             </Navigation>
 
-            <ProfileOrSignIn
-                setIsActive={setIsModalActive}
-            />
+            <ProfileOrSignIn />
 
-            <ModalSignIn
-                isActive={isActiveModal}
-                setIsActive={setIsModalActive}
-            />
+            <ModalSignIn />
         </Container>
     )
 }

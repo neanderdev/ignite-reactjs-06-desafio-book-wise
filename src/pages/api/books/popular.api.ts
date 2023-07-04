@@ -10,17 +10,17 @@ export default async function handler(
     return res.status(405).end();
   }
 
-  const reviews = await prisma.rating.findMany({
+  const popularBooks = await prisma.rating.findMany({
     orderBy: [
       {
-        created_at: "desc",
+        rate: "desc",
       },
     ],
     include: {
       book: true,
-      user: true,
     },
+    take: 4,
   });
 
-  return res.status(200).json({ reviews });
+  return res.status(200).json({ popularBooks });
 }

@@ -10,17 +10,41 @@ export default async function handler(
     return res.status(405).end();
   }
 
-  const teste = req.query;
-
-  console.log(teste);
+  const filter = req.query.filter as string;
 
   const books = await prisma.book.findMany({
-    orderBy: [
-      {
-        created_at: "desc",
-      },
-    ],
+    where: {
+      ...(filter
+        ? {
+            categories: {
+              some: {
+                category: {
+                  name: filter,
+                },
+              },
+            },
+          }
+        : {}),
+    },
+    include: {
+      ratings: true,
+    },
   });
 
-  return res.status(200).json({ books });
+  const content = books.map((book) => {
+    return {
+      books: {
+        id: book.id,
+        name: book.name,
+        author: book.author,
+        cover_url: book.cover_url,
+        created_at: book.created_at,
+        summary: book.summary,
+        total_pages: book.total_pages,
+      },
+      ratings: book.ratings,
+    };
+  });
+
+  return res.status(200).json(content);
 }

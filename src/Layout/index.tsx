@@ -1,22 +1,36 @@
 import { ReactNode } from "react";
 
+import { ModalBookDetails } from "@/components/Modals/ModalBookDetails";
+import { ModalSignIn } from "@/components/Modals/ModalSignIn";
+
 import { Navbar } from "../components/Navbar";
 
-import { LayoutContainer } from "./styles";
+import { Container, Content, Header } from "./styles";
 
 interface Props {
-    children: ReactNode
+    title: string;
+    icon: ReactNode;
+    children: ReactNode;
 }
-export default function Layout({ children }: Props) {
 
+export default function DefaultLayout({ title, icon, children }: Props) {
     return (
-        <LayoutContainer>
+        <Container>
             <Navbar />
 
-            <div>
-                {children}
-            </div>
+            <Content>
+                <Header>
+                    {icon}
 
-        </LayoutContainer>
+                    <h1>{title}</h1>
+                </Header>
+
+                {children}
+            </Content>
+
+            <ModalSignIn />
+
+            <ModalBookDetails />
+        </Container>
     )
 }
