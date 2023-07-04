@@ -7,7 +7,7 @@ import { providerSchema } from './utils/providers-schema'
 
 import { Banner, Container, Content } from './styles'
 
-import logoSVG from '../../aseets/logo.svg'
+import logoSVG from '../../assets/logo.svg'
 
 export default function Home() {
     return (

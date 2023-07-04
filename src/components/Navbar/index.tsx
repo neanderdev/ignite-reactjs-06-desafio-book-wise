@@ -7,7 +7,7 @@ import { theme } from '@/styles/stitches.config';
 
 import { Container, Link as LinkCSS, SignIn } from "./styles";
 
-import logoSvg from '../../aseets/logo.svg';
+import logoSvg from '../../assets/logo.svg';
 
 export function Navbar() {
     const router = useRouter()
