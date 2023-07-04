@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import { BookCardReduce } from '@/components/Book/BookCardReduce';
 import Layout from "@/components/Layout";
+import { SearchInput } from '@/components/SearchInput';
 
 import { theme } from '@/styles/stitches.config';
 
@@ -11,7 +12,7 @@ import { bookFilters } from './utils/books-filters';
 
 import { recentReviews } from '../home/utils/book';
 
-import * as Styled from './styles';
+import { ExplorerBooks, Filter, FiltersContainer, Header, Search } from './styles';
 
 
 export default function Explore() {
@@ -33,31 +34,35 @@ export default function Explore() {
 
             <Layout>
                 {/* Header */}
-                <Styled.Header>
+                <Header>
                     <Binoculars size={32} color={colors.green100.value} />
 
                     <h1>Explorar</h1>
-                </Styled.Header>
+                </Header>
+
+                <Search >
+                    <SearchInput placeholder='Buscar livro ou autor' />
+                </Search>
 
                 {/* Filters */}
-                <Styled.FiltersContainer>
+                <FiltersContainer>
                     {bookFilters.map(filter => (
-                        <Styled.Filter
+                        <Filter
                             key={filter}
                             isSelected={filterSelected === filter}
                             onClick={() => setFilterSelected(filter)}
                         >
                             {filter}
-                        </Styled.Filter>
+                        </Filter>
                     ))}
-                </Styled.FiltersContainer>
+                </FiltersContainer>
 
                 {/* Cards */}
-                <Styled.ExplorerBooks>
+                <ExplorerBooks>
                     {recentReviews.map(pub => (
                         <BookCardReduce key={pub.id} book={pub.book} />
                     ))}
-                </Styled.ExplorerBooks>
+                </ExplorerBooks>
             </Layout>
 
         </>

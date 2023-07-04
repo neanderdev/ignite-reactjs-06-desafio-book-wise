@@ -13,5 +13,6 @@ export const LayoutContainer = styled("div", {
 
   "> div": {
     flex: 1,
+    position: "relative",
   },
 });
