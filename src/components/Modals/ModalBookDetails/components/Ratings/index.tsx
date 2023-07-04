@@ -1,32 +1,41 @@
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 
 import { Avatar } from '@/components/Avatar';
 import { Box } from '@/components/Box';
 import { AvaliationStars } from '@/components/Generics/AvaliationStars';
 import { SectionHeader } from '@/components/Generics/SectionHeader';
 
-import { IRatingWithUser } from '@/interface/IBooks';
+import { IBaseRating, IBaseUser } from '@/interface/IBooks';
 
 import { useModal } from '@/hooks/useModal';
+
+import { publishedDateFormat } from '@/utils/published-date-format';
 
 import { Post } from '../Post';
 
 import { Profile, PublishedAt, ReviewsWrapper, Title } from './styles';
 
 interface Props {
-    ratings: IRatingWithUser[];
-    uploadRating: (description: string) => void;
+    ratings: (IBaseRating & {
+        user: IBaseUser;
+    })[];
     isAvailableForRating: boolean;
     setIsAvailableForRating: (status: boolean) => void;
+    uploadRating: (description: string, rate: number) => void;
 }
 
-export function Ratings({ ratings, isAvailableForRating, setIsAvailableForRating, uploadRating }: Props) {
+export function Ratings({
+    ratings,
+    uploadRating,
+    isAvailableForRating,
+    setIsAvailableForRating,
+}: Props) {
     const { data } = useSession();
+    const { setSignInModal, setDetailsModal } = useModal();
 
-    const { setSignInModal } = useModal();
-
-    const userPost = ratings ? ratings.find(rating => rating.user.email === data?.user?.email) : null;
-    const otherPosts = ratings ? ratings.filter(rating => rating.user.email !== data?.user?.email) : null;
+    const userPost = ratings ? ratings.find(rating => rating.user_id === data?.id) : null;
+    const otherPosts = ratings ? ratings.filter(rating => rating.user_id !== data?.id) : null;
 
     async function handleReview() {
         if (!data?.user) {
@@ -43,6 +52,15 @@ export function Ratings({ ratings, isAvailableForRating, setIsAvailableForRating
         setIsAvailableForRating(true);
     }
 
+    const router = useRouter();
+
+    async function handleRedirect(userId: string) {
+        setDetailsModal(false);
+        router.push(`/profile/${userId}`);
+    }
+
+    console.log(data)
+
     return (
         <ReviewsWrapper>
             <SectionHeader>
@@ -52,19 +70,23 @@ export function Ratings({ ratings, isAvailableForRating, setIsAvailableForRating
 
             {isAvailableForRating && (
                 <Post
-                    avatar_url={data?.avatar_url!}
                     name={data?.name!}
                     uploadRating={uploadRating}
+                    avatar_url={data?.avatar_url!}
                 />
             )}
 
             {userPost && (
-                <Box key={userPost.rating.id} direction="column">
+                <Box
+                    key={userPost.rate}
+                    direction="column"
+                    onClick={() => handleRedirect(userPost.user_id)}
+                >
                     <SectionHeader>
                         <Profile>
                             <Avatar
-                                src={userPost.user.avatar_url}
                                 alt={userPost.user.name}
+                                src={userPost.user.avatar_url}
                                 width={40}
                                 height={40}
                             />
@@ -72,45 +94,47 @@ export function Ratings({ ratings, isAvailableForRating, setIsAvailableForRating
                             <div>
                                 <Title>{userPost.user.name}</Title>
 
-                                <PublishedAt>{userPost.rating.created_at}</PublishedAt>
+                                <PublishedAt>{publishedDateFormat(userPost.created_at)}</PublishedAt>
                             </div>
                         </Profile>
 
-                        <AvaliationStars bookRating={userPost.rating.rate} />
+                        <AvaliationStars bookRating={userPost.rate} />
                     </SectionHeader>
 
-                    <p>{userPost.rating.description}</p>
+                    <p>{userPost.description}</p>
                 </Box>
             )}
 
-            {otherPosts
-                && otherPosts.map(post =>
-                (
-                    <Box key={post.rating.id} direction="column">
-                        <SectionHeader>
-                            <Profile>
-                                <Avatar
-                                    src={post.user.avatar_url}
-                                    alt={post.user.name}
-                                    width={40}
-                                    height={40}
-                                />
+            {otherPosts && otherPosts.map(post =>
+            (
+                <Box
+                    key={post.user.id}
+                    direction="column"
+                    onClick={() => handleRedirect(post.user_id)
+                    }>
+                    <SectionHeader>
+                        <Profile>
+                            <Avatar
+                                alt={post.user.name}
+                                src={post.user.avatar_url}
+                                width={40}
+                                height={40}
+                            />
 
-                                <div>
-                                    <Title>{post.user.name}</Title>
+                            <div>
+                                <Title>{post.user.name}</Title>
 
-                                    <PublishedAt>{post.rating.created_at}</PublishedAt>
-                                </div>
-                            </Profile>
+                                <PublishedAt>{publishedDateFormat(post.created_at)}</PublishedAt>
+                            </div>
+                        </Profile>
 
-                            <AvaliationStars bookRating={post.rating.rate} />
-                        </SectionHeader>
+                        <AvaliationStars bookRating={post.rate} />
+                    </SectionHeader>
 
-                        <p>{post.rating.description}</p>
-                    </Box>
-                ))
+                    <p>{post.description}</p>
+                </Box>
+            ))
             }
-
         </ReviewsWrapper>
     )
 }

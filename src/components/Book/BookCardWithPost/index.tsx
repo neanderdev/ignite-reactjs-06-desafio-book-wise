@@ -1,13 +1,16 @@
 import Image from 'next/image';
+import Link from 'next/link';
 
-import { Box } from '@/components/Box';
 import { Avatar } from '@/components/Avatar';
+import { Box } from '@/components/Box';
 import { Star } from '@/components/Start';
 
 import { theme } from "@/styles/stitches.config";
 
 import { IBook, IBookRating } from '@/interface/IBooks';
 import { IUser } from '@/interface/IUser';
+
+import { publishedDateFormat } from '@/utils/published-date-format';
 
 import { About, Author, Content, Description, Header, Profile, PublishedAt, Rate, Title } from './styles';
 
@@ -19,6 +22,8 @@ interface Props {
 
 export function BookCardWithPost({ book, rating, user }: Props) {
   const { colors } = theme;
+
+  const formated_date = publishedDateFormat(rating.created_at);
 
   return (
     <Box direction="column" padding={'md'}>
@@ -32,9 +37,11 @@ export function BookCardWithPost({ book, rating, user }: Props) {
           />
 
           <div>
-            <Title>{user.name}</Title>
+            <Link href={`/profile/${user.id}`}>
+              <Title>{user.name}</Title>
+            </Link>
 
-            <PublishedAt>{user.created_at}</PublishedAt>
+            <PublishedAt>{formated_date}</PublishedAt>
           </div>
         </Profile>
       </Header>

@@ -23,12 +23,12 @@ export const Header = styled("header", {
 
   h1: {
     color: "$gray100",
+    textAlign: "center",
   },
 });
 
 export const ExplorerBooks = styled("section", {
   display: "grid",
-  gridTemplateColumns: "repeat(3, 1fr)",
   gap: "20px",
 });
 

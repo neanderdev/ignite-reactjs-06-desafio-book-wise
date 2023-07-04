@@ -3,8 +3,8 @@ import { useState } from "react";
 
 import { Avatar } from "@/components/Avatar";
 import { Box } from "@/components/Box";
-import { AvaliationStars } from "@/components/Generics/AvaliationStars";
 import { SectionHeader } from "@/components/Generics/SectionHeader";
+import { Star } from "@/components/Start";
 
 import { theme } from "@/styles/stitches.config";
 
@@ -15,7 +15,7 @@ import { AmountWords, Button, Footer, TextArea, TextContainer } from "./styles";
 interface Props {
     name: string;
     avatar_url: string;
-    uploadRating: (description: string) => void;
+    uploadRating: (description: string, rate: number) => void;
 }
 
 export function Post({ name, avatar_url, uploadRating }: Props) {
@@ -23,10 +23,14 @@ export function Post({ name, avatar_url, uploadRating }: Props) {
 
     const [description, setDescription] = useState('');
     const [isSending, setIsSending] = useState(false);
+    const [rate, setRate] = useState(0);
+    const [enableToChangeRate, setEnableToChangeRate] = useState(false);
 
     async function handleSubmitReview() {
+        if (description.length <= 8) return;
+
         setIsSending(true);
-        uploadRating(description);
+        uploadRating(description, rate + 1);
 
         setDescription('');
         setIsSending(false);
@@ -34,6 +38,17 @@ export function Post({ name, avatar_url, uploadRating }: Props) {
 
     async function handleErase() {
         setDescription('');
+    }
+
+    // Rating control
+    const handleMouseMove = (index: number) => {
+        if (enableToChangeRate) {
+            setRate(index);
+        }
+    };
+
+    const handleMouseClick = () => {
+        setEnableToChangeRate(state => !state);
     }
 
     return (
@@ -50,7 +65,21 @@ export function Post({ name, avatar_url, uploadRating }: Props) {
                     <Title>{name}</Title>
                 </Profile>
 
-                <AvaliationStars bookRating={0} size={24} />
+                <div
+                    style={{ display: 'flex', flexDirection: 'row', gap: '6px' }}
+                    onClick={handleMouseClick}
+                >
+                    {[...Array(5)].map((_, index) => {
+                        return (
+                            <div key={index} onMouseMove={() => handleMouseMove(index)}>
+                                <Star
+                                    size={20}
+                                    color={(rate) >= index && colors.purple100.value}
+                                />
+                            </div>
+                        )
+                    })}
+                </div>
             </SectionHeader>
 
             <TextContainer>

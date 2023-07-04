@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { Box } from '@/components/Box';
 import { AvaliationStars } from '@/components/Generics/AvaliationStars';
 
-import { IBaseCategories, IBookWithAverage } from '@/interface/IBooks';
+import { IBaseBook, IBaseCategories, IBaseRating } from '@/interface/IBooks';
 
 import { theme } from '@/styles/stitches.config';
 
@@ -13,14 +13,18 @@ import { Escritor, HeroDetails, HeroFooter, HeroHeader, InfoContainer, Ratio, Ti
 export type ICategoryWithoutIds = Omit<IBaseCategories, 'book_id' | 'categoryId'>;
 
 interface Props {
-    book: IBookWithAverage;
-    categories: ICategoryWithoutIds[];
+    book: IBaseBook;
+    categories: IBaseCategories[];
+    ratings: IBaseRating[]
 }
 
-export function Hero({ book, categories }: Props) {
+export function Hero({ book, categories, ratings }: Props) {
     const { colors } = theme;
 
     const book_image = book?.cover_url?.replace('public', '');
+    const average = ratings ? ratings.reduce((acc, rating) => {
+        return acc += rating.rate
+    }, 0) / ratings.length : 0
 
     return (
         <Box direction={"column"} padding="md">
@@ -40,9 +44,9 @@ export function Hero({ book, categories }: Props) {
                     </div>
 
                     <Ratio>
-                        <AvaliationStars bookRating={book.average} size={20} />
+                        <AvaliationStars bookRating={average} size={20} />
 
-                        <span>3 Avaliações</span>
+                        <span>{ratings.length} Avaliações</span>
                     </Ratio>
                 </HeroDetails>
             </HeroHeader>
@@ -56,7 +60,9 @@ export function Hero({ book, categories }: Props) {
 
                         <div>
                             {categories.map(({ category }) => (
-                                <span key={category?.id}>{category?.name}</span>
+                                <span key={category?.id}>
+                                    {category?.name}
+                                </span>
                             ))}
                         </div>
                     </div>

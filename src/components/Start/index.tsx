@@ -3,7 +3,7 @@ import { Star as StarIcon } from "@phosphor-icons/react";
 import { theme } from "@/styles/stitches.config";
 
 interface Props {
-    color: string | false;
+    color?: string | false;
     size?: number;
 }
 
@@ -13,7 +13,7 @@ export function Star({ color, size }: Props) {
     if (!color) {
         return <StarIcon
             size={size ?? 16}
-            weight="bold"
+            weight="regular"
             color={colors.purple100.value}
         />
     }

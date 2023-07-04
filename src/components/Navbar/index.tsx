@@ -67,7 +67,7 @@ export function Navbar() {
                         <Link
                             key={link.id}
                             text={link.text}
-                            href={link.href}
+                            href={`${link.href}/${session.data.id}`}
                             icon={link.icon}
                         />
                     ))}

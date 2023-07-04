@@ -1,9 +1,6 @@
-import { getServerSession } from "next-auth";
 import { NextApiRequest, NextApiResponse } from "next/types";
 
 import { prisma } from "@/services/database/prismadb";
-
-import { buildNextAuthOptions } from "../auth/[...nextauth].api";
 
 export default async function handler(
   req: NextApiRequest,
@@ -13,17 +10,11 @@ export default async function handler(
     return res.status(405).end();
   }
 
-  const session = await getServerSession(
-    req,
-    res,
-    buildNextAuthOptions(req, res)
-  );
-
-  const bookId = req.query.book_id as string;
+  const userId = req.query.user_id as string;
 
   const ratings = await prisma.rating.findMany({
     where: {
-      book_id: bookId,
+      user_id: userId,
     },
     orderBy: [
       {
@@ -31,10 +22,23 @@ export default async function handler(
       },
     ],
     include: {
-      user: true,
       book: true,
     },
+    take: 10,
   });
 
-  return res.status(200).json({ ratings });
+  // const ratingsByDate = ratings.reduce((acc, rating) => {
+  //   const date = rating.created_at.toDateString();
+
+  //   if (!acc[date]) {
+  //     acc[date] = [];
+  //   }
+
+  //   acc[date].push(rating);
+  //   return acc;
+  // }, []);
+
+  // console.log(ratingsByDate)
+
+  return res.status(200).json(ratings);
 }

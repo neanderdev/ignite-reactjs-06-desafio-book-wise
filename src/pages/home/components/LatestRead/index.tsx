@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { BookCard } from "@/components/Book/BookCard";
 import { Loading } from "@/components/Generics/Loading";
 
-import { IBaseBook, IBaseRating, IBook } from "@/interface/IBooks";
+import { IBaseBook, IBaseRating } from "@/interface/IBooks";
 
 import { api } from "@/services/http";
 
@@ -17,7 +17,7 @@ type Props = {
     urlReference: string
 }
 
-interface IBookRead extends IBook {
+type IBookRead = IBaseBook & {
     rate: number;
 }
 
@@ -37,7 +37,8 @@ export function LatestRead({ title, urlReference }: Props) {
             const getLatestRead = async () => {
                 try {
                     setIsLoading(true);
-                    const response = await api.get<IRequest>(`/ratings/user-latest`);
+
+                    const response = await api.get<IRequest>(`/ratings/user-last`);
 
                     if (response.data) {
                         const filteredReading = {
@@ -58,7 +59,6 @@ export function LatestRead({ title, urlReference }: Props) {
         }
     }, [session?.data?.user]);
 
-
     if (!session?.data) return null;
 
     return (
@@ -68,6 +68,7 @@ export function LatestRead({ title, urlReference }: Props) {
 
                 <Link href={urlReference}>
                     Ver todos
+
                     <CaretRight size={16} weight="fill" />
                 </Link>
             </Header>

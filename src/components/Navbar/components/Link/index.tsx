@@ -12,10 +12,14 @@ type Props = {
 export function Link({ text, href, icon }: Props) {
     const { pathname } = useRouter();
 
+    const isActive = href.includes('/profile') 
+    ? pathname.includes('/profile') 
+    : pathname === href;
+
     return (
         <LinkContainer
             href={href}
-            active={pathname.includes(href)}
+            active={isActive}
         >
             {icon}
             {text}
